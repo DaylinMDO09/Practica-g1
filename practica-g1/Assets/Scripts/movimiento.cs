@@ -18,7 +18,6 @@ public class movimiento : MonoBehaviour
 
     void Update()
     {
-        // Movimiento horizontal
         movimientoX = 0f;
 
         if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
@@ -27,7 +26,6 @@ public class movimiento : MonoBehaviour
         if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
             movimientoX = -mover;
 
-        // Salto
         if ((Keyboard.current.wKey.wasPressedThisFrame ||
              Keyboard.current.upArrowKey.wasPressedThisFrame) &&
              isGrounded)

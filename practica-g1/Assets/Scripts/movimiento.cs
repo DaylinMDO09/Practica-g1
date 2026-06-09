@@ -1,42 +1,67 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class movimiento : MonoBehaviour
 {
-    public float mover = 2;
+    public float mover = 5f;
+    public float salto = 8f;
 
-    public float salto = 3;
+    private Rigidbody2D rg2d;
+    private float movimientoX;
+    private bool saltar;
+    private bool isGrounded;
 
-    Rigidbody2D rg2d;
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rg2d = GetComponent<Rigidbody2D>();
-
     }
 
-    // Update is called once per frame
+    void Update()
+    {
+        // Movimiento horizontal
+        movimientoX = 0f;
+
+        if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed)
+            movimientoX = mover;
+
+        if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed)
+            movimientoX = -mover;
+
+        // Salto
+        if ((Keyboard.current.wKey.wasPressedThisFrame ||
+             Keyboard.current.upArrowKey.wasPressedThisFrame) &&
+             isGrounded)
+        {
+            saltar = true;
+        }
+    }
+
     void FixedUpdate()
     {
-        if (Input.GetKey("right") || Input.GetKey("d"))
-        {
-            rg2d.linearVelocity = new Vector2(mover, rg2d.linearVelocity.y);
-        }
-        else if (Input.GetKey("left") || Input.GetKey("a"))
-        {
-            rg2d.linearVelocity = new Vector2(-mover, rg2d.linearVelocity.y);
-        }
-        else
-        {
-            rg2d.linearVelocity = new Vector2(0, rg2d.linearVelocity.y);
-        }
-        if ((Input.GetKey("up") || Input.GetKey("w")) && Check.isGrounded)
-        {
-            rg2d.linearVelocity = new Vector2(rg2d.linearVelocity.x, salto);
-        }
+        rg2d.linearVelocity = new Vector2(
+            movimientoX,
+            rg2d.linearVelocity.y
+        );
 
+        if (saltar)
+        {
+            rg2d.linearVelocity = new Vector2(
+                rg2d.linearVelocity.x,
+                salto
+            );
 
+            saltar = false;
+            isGrounded = false;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        isGrounded = true;
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        isGrounded = false;
     }
 }

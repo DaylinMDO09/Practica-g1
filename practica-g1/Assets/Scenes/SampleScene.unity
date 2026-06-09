@@ -516,7 +516,6 @@ GameObject:
   m_Component:
   - component: {fileID: 472553891}
   - component: {fileID: 472553893}
-  - component: {fileID: 472553892}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -539,18 +538,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 423473765}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &472553892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 472553890}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94e56c57ca19e8a49b6bc3652116f97d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Check
 --- !u!61 &472553893
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -7,13 +7,17 @@ public class movimiento : MonoBehaviour
     public float salto = 8f;
 
     private Rigidbody2D rg2d;
+    private Animator animator;
     private float movimientoX;
     private bool saltar;
     private bool isGrounded;
+    private Vector3 escalaOriginal;
 
     void Start()
     {
         rg2d = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+        escalaOriginal = transform.localScale;
     }
 
     void Update()
@@ -31,6 +35,25 @@ public class movimiento : MonoBehaviour
              isGrounded)
         {
             saltar = true;
+        }
+
+        animator.SetBool("Correr", movimientoX != 0);
+
+        if (movimientoX > 0)
+        {
+            transform.localScale = new Vector3(
+                Mathf.Abs(escalaOriginal.x),
+                escalaOriginal.y,
+                escalaOriginal.z
+            );
+        }
+        else if (movimientoX < 0)
+        {
+            transform.localScale = new Vector3(
+                -Mathf.Abs(escalaOriginal.x),
+                escalaOriginal.y,
+                escalaOriginal.z
+            );
         }
     }
 

@@ -39,6 +39,8 @@ public class movimiento : MonoBehaviour
 
         animator.SetBool("Correr", movimientoX != 0);
 
+        animator.SetBool("Saltar", !isGrounded);
+
         if (movimientoX > 0)
         {
             transform.localScale = new Vector3(

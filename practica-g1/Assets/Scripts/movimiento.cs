@@ -23,7 +23,6 @@ public class movimiento : MonoBehaviour
     private int manzanas = 0;
     private int bananas = 0;
 
-    // 🔒 EVITA DOBLE RECOLECCIÓN
     private bool recolectando = false;
 
     void Start()

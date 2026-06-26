@@ -1,23 +1,38 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using TMPro;
+using System.Collections;
 
 public class movimiento : MonoBehaviour
 {
+    [Header("Movimiento")]
     public float mover = 5f;
     public float salto = 8f;
 
+    [Header("UI")]
+    public TMP_Text contadorJuego;
+
     private Rigidbody2D rg2d;
     private Animator animator;
+
     private float movimientoX;
     private bool saltar;
     private bool isGrounded;
     private Vector3 escalaOriginal;
+
+    private int manzanas = 0;
+    private int bananas = 0;
+
+    // 🔒 EVITA DOBLE RECOLECCIÓN
+    private bool recolectando = false;
 
     void Start()
     {
         rg2d = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         escalaOriginal = transform.localScale;
+
+        ActualizarUI();
     }
 
     void Update()
@@ -38,25 +53,9 @@ public class movimiento : MonoBehaviour
         }
 
         animator.SetBool("Correr", movimientoX != 0);
-
         animator.SetBool("Saltar", !isGrounded);
 
-        if (movimientoX > 0)
-        {
-            transform.localScale = new Vector3(
-                Mathf.Abs(escalaOriginal.x),
-                escalaOriginal.y,
-                escalaOriginal.z
-            );
-        }
-        else if (movimientoX < 0)
-        {
-            transform.localScale = new Vector3(
-                -Mathf.Abs(escalaOriginal.x),
-                escalaOriginal.y,
-                escalaOriginal.z
-            );
-        }
+        Girar();
     }
 
     void FixedUpdate()
@@ -78,6 +77,26 @@ public class movimiento : MonoBehaviour
         }
     }
 
+    private void Girar()
+    {
+        if (movimientoX > 0)
+        {
+            transform.localScale = new Vector3(
+                Mathf.Abs(escalaOriginal.x),
+                escalaOriginal.y,
+                escalaOriginal.z
+            );
+        }
+        else if (movimientoX < 0)
+        {
+            transform.localScale = new Vector3(
+                -Mathf.Abs(escalaOriginal.x),
+                escalaOriginal.y,
+                escalaOriginal.z
+            );
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         isGrounded = true;
@@ -86,5 +105,48 @@ public class movimiento : MonoBehaviour
     private void OnCollisionExit2D(Collision2D collision)
     {
         isGrounded = false;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (recolectando) return;
+
+        if (other.CompareTag("Collectible-Manzana"))
+        {
+            recolectando = true;
+            manzanas++;
+            StartCoroutine(Recolectar(other.gameObject));
+        }
+        else if (other.CompareTag("Collectible-Banana"))
+        {
+            recolectando = true;
+            bananas++;
+            StartCoroutine(Recolectar(other.gameObject));
+        }
+
+        ActualizarUI();
+    }
+
+    private IEnumerator Recolectar(GameObject objeto)
+    {
+        Animator anim = objeto.GetComponent<Animator>();
+
+        if (anim != null)
+        {
+            anim.SetTrigger("Collect");
+        }
+
+        yield return new WaitForSeconds(0.35f);
+
+        recolectando = false;
+        Destroy(objeto);
+    }
+
+    private void ActualizarUI()
+    {
+        if (contadorJuego != null)
+        {
+            contadorJuego.text = "Manzanas: " + manzanas + " | Bananas: " + bananas;
+        }
     }
 }
